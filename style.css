@@ -171,7 +171,7 @@
     }
   
     .ring-bg {
-      background: #000 url('/images/rings.jpg') no-repeat;
+      background: #000 url('/images/rings.avif') no-repeat;
       background-size: cover;
       padding: 3em 0;
       color: white;
@@ -213,6 +213,7 @@
       height: 100vh;
       background-size: cover;
       background-size: 100% 100%;
+      background-position: bottom center;
   
       .inner {
         display: flex;
@@ -221,7 +222,7 @@
       }
     }
     .slide:nth-of-type(1) {
-      background: #000 url('/images/slide1.jpg') no-repeat;
+      background: #000 url('/images/slide1.jpeg') no-repeat;
       background-size: cover;
       color: white;
   
@@ -231,7 +232,7 @@
       }
     }
     .slide:nth-of-type(2) {
-      background: #000 url('/images/slide2.jpg') no-repeat;
+      background: #000 url('/images/slide2.jpeg') no-repeat;
       background-size: cover;
       color: black;
   
@@ -241,7 +242,7 @@
       }
     }
     .slide:nth-of-type(3) {
-      background: #000 url('/images/slide3.jpg') no-repeat;
+      background: #000 url('/images/slide3.jpeg') no-repeat;
       background-size: cover;
       color: white;
   
