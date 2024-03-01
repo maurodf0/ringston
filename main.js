@@ -8,134 +8,133 @@ import * as dat from 'dat.gui';
 import * as THREE from 'three';
 import Lenis from '@studio-freight/lenis';
 
-
+gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(TextPlugin);
 const loader = new GLTFLoader();
 let ring = null;
 let contactRotation = false;
 let renderer,scene,camera;
 
-gsap.registerPlugin(ScrollTrigger);
-gsap.registerPlugin(TextPlugin);
-
-function initThreeJS() {
-    //Debug
+function initThreeJS(){
     const gui = new dat.GUI();
-    dat.GUI.toggleHide();
+    //nasconde l'ui del controllo
+   // dat.GUI.toggleide();
 
-    //canvas
-    const canvas = document.querySelector('canvas.webgl');
+   //CANVAS
+   const canvas = document.querySelector('canvas.webgl');
 
-    //Scene
-    scene = new THREE.Scene();
+   // SCENE
+   scene = new THREE.Scene();
 
-    loader.load('/ring.glb', function(gltf){
-         ring = gltf.scene;
-       
-        ring.position.set(0,0,0);
-        ring.scale.set(0.5,0.5,0.5);
-        scene.add(ring);
+   //load the ring 3d file
+   loader.load('ring.glb', function(gltf){
+     ring = gltf.scene;
+     ring.position.set(0,0,0);
+     ring.scale.set(0.5,0.5,0.5);
+     scene.add(ring);
 
-        const ringFolder = gui.addFolder('Ring');
-        ringFolder.add(ring.position, 'x').min(-10).max(10).step(0.01).name('Position X');
+     const tl = gsap.timeline({
+          scrollTrigger: {
+               trigger: 'section.details',
+               start: 'top bottom',
+               end: 'bottom top',
+               scrub: true,
+               markers: true
+          }, 
+               defaults: {
+                    ease: 'power3.inOut',
+                    duration: 3
+               }
+          
+     });
 
-        const tl = gsap.timeline({
-            ScrollTrigger: {
-                trigger: 'section.details',
-                start: 'top bottom',
-                end: 'bottom top',
-                scrub: true
-            }, defaults: {
-                ease: 'power3.out',
-                duration: 3
-            }
-        });
+     tl.to(ring.position, {
+          z:2.5,
+          y:-0.34
+     })
+     .to(ring.rotation, {
+          z:1
+     }, '<');
 
-        tl.to(ring.position, {
-            z: 2.5,
-            y: -0.34
-        })
-        .to(ring.rotation, {
-            z:1
-        }, '<');
+     const directionalLight = new THREE.DirectionalLight('lightblue, 10');
+     directionalLight.position.z = 8;
+     scene.add(directionalLight);
 
-    });
+   });
 
-    //Sizes
-    const sizes = {
-        width: window.innerWidth,
-        height: window.innerHeight
-    }
+   // SIZES
+   const sizes = {
+          width: window.innerWidth,
+          height: window.innerHeight
+   }
 
-    window.addEventListener('resize', () => {
-        // Update sizes
+   window.addEventListener('resize', () => {
+        // UPDATE SIZE
         sizes.width = window.innerWidth;
         sizes.height = window.innerHeight;
-    
-        // Update camera
-        camera.aspect = sizes.width / sizes.height;
+
+        //Update Camera
+        camera.aspect = window.width / sizes.height;
         camera.updateProjectionMatrix();
-    
-        // Update renderer
+
+        //Update renderer
         renderer.setSize(sizes.width, sizes.height);
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    })
+        renderer.setPixelRatio(Math.min(window.devicePixelRation, 2));
+   });
 
-/**
- * Camera
- */
-// Base camera
-const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100)
-camera.position.x = 0
-camera.position.y = 0
-camera.position.z = 2
-scene.add(camera)
-
-// Controls
-// const controls = new OrbitControls(camera, canvas)
-// controls.enableDamping = true
-
-/**
- * Renderer
- */
-const renderer = new THREE.WebGLRenderer({
-    canvas: canvas
-})
-renderer.setSize(sizes.width, sizes.height)
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-
+   // CAMERA
+   // Base camera
+   camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100)
+   camera.position.x = 0
+   camera.position.y = 0
+   camera.position.z = 2
+   scene.add(camera)
+   
+   // Controls
+   // const controls = new OrbitControls(camera, canvas)
+   // controls.enableDamping = true
+   
+   //RENDERER
+   renderer = new THREE.WebGLRenderer({
+       canvas: canvas,
+       alpha: true
+   })
+   renderer.setSize(sizes.width, sizes.height)
+   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 }
 
+
 function initRenderLoop(){
+     const clock = new THREE.Clock();
 
-    const clock = new THREE.Clock();
-    
-    const tick = () => {
+     const tick = () => {
+          const elapsedTime = clock.getElapsedTime();
 
-        const elapsedTime = clock.getElapsedTime();
+          //update object
+          if(ring){
+               if(!contactRotation){
+                    ring.rotation.y = .5 * elapsedTime;
+                    ring.rotation.x = 0;
+                    ring.rotation.z = 0;
+               } else {
+                    ring.rotation.y = 0;
+                    ring.rotation.x = .2 * elapsedTime;
+                    ring.rotation.z = 0 * elapsedTime;
+               }
+          }
 
-        //Update Object
-        if(ring){
-            if(!contactRotation){
-                ring.rotation.y = .5 * elapsedTime;
-                ring.roation.x = 0;
-                ring.roation.y = 0;
-            } else {
-                ring.rotation.y = 0;
-                ring.roation.x = .2 * elapsedTime;
-                ring.roation.y = .2 * elapsedTime;
-            }
-        }
+          //Render
+          renderer.render(scene, camera);
 
-        // Render
-        renderer.render(scene, camera);
-
-        // Call tick again on the next frame
-        window.requestAnimationFrame(tick);
-    }
-    tick();
+          window.requestAnimationFrame(tick);
+     }
+     tick();
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+
     initThreeJS();
     initRenderLoop();
-})
+
+
+});
