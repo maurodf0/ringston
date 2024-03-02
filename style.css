@@ -7,6 +7,7 @@
     display: grid;
     place-content: center;
     transition: transform 1s ease-in-out;
+    
   
     svg {
       animation: growRing 1.5s ease-in-out infinite;
@@ -234,7 +235,7 @@
     .slide:nth-of-type(2) {
       background: #000 url('/images/slide2.jpeg') no-repeat;
       background-size: cover;
-      color: black;
+      color: white;
   
       p {
         width: 100%;
@@ -316,6 +317,10 @@
     }
   
   }
+
+  .line {
+    display: inline-block !important;
+  }
   
   
   @media (min-width: 768px) {
@@ -375,3 +380,4 @@
     }
     
   }
+
