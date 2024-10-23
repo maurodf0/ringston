@@ -19,10 +19,9 @@ let contactRotation = false;
 let renderer,scene,camera;
 
 function initThreeJS(){
-     // UI per il controllo delle stats
-//     const gui = new dat.GUI();
-    
-   dat.GUI.togglehide();
+    //const gui = new dat.GUI();
+    //nasconde l'ui del controllo
+   //dat.GUI.togglehide();
 
    //CANVAS
    const canvas = document.querySelector('canvas.webgl');
@@ -36,7 +35,6 @@ function initThreeJS(){
      ring.position.set(0,0,0);
      ring.scale.set(0.5,0.5,0.5);
      scene.add(ring);
-
 
      
 
@@ -81,7 +79,7 @@ function initThreeJS(){
                end: 'bottom center',
                toggleActions: 'play none none reverse',
                scrub:true,
-             
+               // markers:true,
                onEnter: () => {
                     toggleWireframe(ring, true, 1)
                     contactRotation = true
