@@ -7,6 +7,7 @@ import * as dat from 'dat.gui';
 import * as THREE from 'three';
 import Lenis from '@studio-freight/lenis';
 
+
 preloadFiles(['ring.glb','images/rings.avif','images/slide1.jpeg','images/slide2.jpeg','images/slide3.jpeg','hands.mp4']);
 
 
@@ -18,9 +19,10 @@ let contactRotation = false;
 let renderer,scene,camera;
 
 function initThreeJS(){
-    const gui = new dat.GUI();
-    //nasconde l'ui del controllo
-   // dat.GUI.toggleide();
+     // UI per il controllo delle stats
+//     const gui = new dat.GUI();
+    
+   dat.GUI.togglehide();
 
    //CANVAS
    const canvas = document.querySelector('canvas.webgl');
@@ -34,6 +36,9 @@ function initThreeJS(){
      ring.position.set(0,0,0);
      ring.scale.set(0.5,0.5,0.5);
      scene.add(ring);
+
+
+     
 
      const tl = gsap.timeline({
           scrollTrigger: {
@@ -51,7 +56,8 @@ function initThreeJS(){
 
      tl.to(ring.position, {
           z:3.5,
-          y:-0.34
+          y:-0.34,
+          x:-2
      })
      .to(ring.rotation, {
           z:1
@@ -75,7 +81,7 @@ function initThreeJS(){
                end: 'bottom center',
                toggleActions: 'play none none reverse',
                scrub:true,
-               markers:true,
+             
                onEnter: () => {
                     toggleWireframe(ring, true, 1)
                     contactRotation = true
@@ -97,9 +103,9 @@ function initThreeJS(){
      });
 
      contactTl.to(ring.position, {
-          z: .3,
+          z: -1,
           x: .4,
-          y:-.23
+          y:0.02
      })
 
   
